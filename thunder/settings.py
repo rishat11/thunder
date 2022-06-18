@@ -46,6 +46,13 @@ INSTALLED_APPS = [
     'main',
 ]
 
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': [
+        'rest_framework.authentication.BasicAuthentication',
+        'rest_framework.authentication.SessionAuthentication',
+    ]
+}
+
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
@@ -148,3 +155,6 @@ if os.name == 'nt':
     os.environ['GDAL_LIBRARY_PATH'] = OSGEO4W + r"\bin\gdal304.dll;"
 
 GDAL_LIBRARY_PATH = r'C:\OSGeo4W\bin\gdal304.dll'
+
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+MEDIA_URL = '/media/'

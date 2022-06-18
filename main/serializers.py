@@ -1,6 +1,6 @@
 from rest_framework import serializers
 
-from main.models import UserProfile, UserPhoto
+from main.models import UserProfile, UserPhoto, Like
 
 
 class UserPhotoSerializer(serializers.ModelSerializer):
@@ -10,8 +10,29 @@ class UserPhotoSerializer(serializers.ModelSerializer):
 
 
 class UserProfileSerializer(serializers.ModelSerializer):
-    photo = UserPhotoSerializer(source='photos')
+    photos = serializers.SerializerMethodField()
+
+    def get_photos(self, obj):
+        customer_account_query = UserPhoto.objects.filter(
+            user_id=obj.id)
+        serializer = UserPhotoSerializer(customer_account_query, many=True)
+
+        return serializer.data
 
     class Meta:
-        exclude = ('location',)
+        fields = [
+            'user',
+            'name',
+            'date_of_birth',
+            'gender',
+            'age',
+            'height',
+            'photos',
+        ]
         model = UserProfile
+
+
+class LikeSerializer(serializers.ModelSerializer):
+    class Meta:
+        fields = '__all__'
+        model = Like

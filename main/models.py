@@ -19,5 +19,12 @@ class UserProfile(models.Model):
 
 
 class UserPhoto(models.Model):
-    user = models.ForeignKey(UserProfile, related_name='photos', related_query_name='photo', on_delete=models.CASCADE)
+    user = models.ForeignKey(UserProfile, on_delete=models.CASCADE)
     photo = models.ImageField(upload_to='uploads/')
+    is_main = models.BooleanField(default=False)
+
+
+class Like(models.Model):
+    liked_user = models.ForeignKey(UserProfile, on_delete=models.CASCADE, related_name='who_liked')
+    current_user = models.ForeignKey(UserProfile, on_delete=models.CASCADE, related_name='user_likes')
+    like = models.BooleanField()

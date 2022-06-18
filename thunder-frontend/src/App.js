@@ -1,6 +1,8 @@
 import React, {Component} from "react";
 import Modal from "./components/Modal";
 import axios from "axios";
+import "./App.css";
+import {Navigate} from 'react-router';
 
 
 class App extends Component {
@@ -23,14 +25,15 @@ class App extends Component {
     }
 
     handleLike = () => {
-        axios.post("/api/likes/", {
-            user: this.state.currentUser,
+        axios.post("/api/like/", {
+            user: this.state.currentUser.user,
             like: true,
-        }).then((res) => this.setState({currentUser: res.data}));
+        }).then((res) => this.setState({currentUser: res.data})
+        ).catch((res) => <Navigate to='/login' push={true}/>);
     };
 
     handleDislike = () => {
-        axios.post("/api/likes/", {
+        axios.post("/api/like/", {
             user: this.state.currentUser,
             like: false,
         }).then((res) => this.setState({currentUser: res.data}));
@@ -38,10 +41,12 @@ class App extends Component {
 
     renderUser = () => {
         const user = this.state.currentUser;
-        console.log(user)
         if (user) {
             return (
-                <div>{user.name}</div>
+                <div>
+                    <div>{user.name}</div>
+                    <img src={user.photos[0].photo} alt="Ошибка при загрузке изображения"/>
+                </div>
             )
         } else {
             return null;
@@ -56,19 +61,9 @@ class App extends Component {
                     <div className="text-center">
                         {this.renderUser()}
                     </div>
-                    <div className="text-center">
-                        <button
-                            className="btn btn-primary"
-                            onClick={this.handleLike}
-                        >
-                            Like
-                        </button>
-                        <button
-                            className="btn btn-primary"
-                            onClick={this.handleDislike}
-                        >
-                            Dislike
-                        </button>
+                    <div className="text-center" style={{'fontSize': '60px', cursor: 'pointer', 'userSelect': 'none'}}>
+                        <i onClick={this.handleLike} className="fa fa-thumbs-up flex-fill"/>
+                        <i onClick={this.handleDislike} className="fa fa-thumbs-down flex-fill"/>
                     </div>
                 </div>
             </main>
